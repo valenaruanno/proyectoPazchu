@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { teacherAPI } from '../utils/api';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import ActivityCard from './ActivityCard';
+import ActivityPage from './ActivityPage';
 
 const Home = () => {
   const [teacherData, setTeacherData] = useState(null);
@@ -99,90 +99,67 @@ const Home = () => {
         onLevelSelect={handleLevelSelect}
       />
 
-      {/* Hero Section */}
-      <section className="text-white py-20" style={{ background: 'linear-gradient(to right, #2563eb, #7c3aed)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Bienvenido, {teacherData?.name && teacherData?.lastName ?
-                `${teacherData.name} ${teacherData.lastName}` : 'Profesor'}
-            </h1>
-            {teacherData?.description && (
-              <p className="text-xl md:text-2xl max-w-4xl mx-auto" style={{
-                color: '#bfdbfe',
-                lineHeight: '1.625'
-              }}>
-                {teacherData.description}
-              </p>
-            )}
-            <div className="mb-8 flex justify-center gap-4 text-xl" style={{
-              marginTop: '2rem',
-              flexWrap: 'wrap'
-            }}>
-              {teacherData?.email && (
-                <div className="flex items-center rounded-full px-4 py-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  {teacherData.email}
+      <div>
+        {!selectedLevel && (
+          <section className="text-white py-20" style={{ background: 'linear-gradient(to right, #2563eb, #7c3aed)' }}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center">
+                <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                  Bienvenido, {teacherData?.name && teacherData?.lastName ?
+                    `${teacherData.name} ${teacherData.lastName}` : 'Profesor'}
+                </h1>
+                {teacherData?.description && (
+                  <p className="text-xl md:text-2xl max-w-4xl mx-auto" style={{
+                    color: '#bfdbfe',
+                    lineHeight: '1.625'
+                  }}>
+                    {teacherData.description}
+                  </p>
+                )}
+                <div className="mb-8 flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-lg sm:text-xl" style={{
+                  marginTop: '2rem',
+                  flexWrap: 'wrap'
+                }}>
+                  {teacherData?.email && (
+                    <div className="flex items-center rounded-full px-3 sm:px-4 py-2 text-sm sm:text-base" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                      <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {teacherData.email}
+                    </div>
+                  )}
+                  {teacherData?.phone && (
+                    <div className="flex items-center rounded-full px-4 py-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                      <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      {teacherData.phone}
+                    </div>
+                  )}
+                  {teacherData?.yearsOfExperience && (
+                    <div className="flex items-center rounded-full px-4 py-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                      <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                      {teacherData.yearsOfExperience} años de experiencia
+                    </div>
+                  )}
                 </div>
-              )}
-              {teacherData?.phone && (
-                <div className="flex items-center rounded-full px-4 py-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  {teacherData.phone}
-                </div>
-              )}
-              {teacherData?.yearsOfExperience && (
-                <div className="flex items-center rounded-full px-4 py-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <svg className="w-5 h-5" style={{ marginRight: '0.5rem' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                  {teacherData.yearsOfExperience} años de experiencia
-                </div>
-              )}
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
+      </div>
 
       {/* Main Content */}
       <main className="flex-grow py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {levels.length > 0 ? (
             selectedLevel ? (
-              <>
-                {/* Selected Level Header */}
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Actividades - {selectedLevel.name}
-                  </h2>
-                  {selectedLevel.description && (
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                      {selectedLevel.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Activities Grid */}
-                {getActivitiesForSelectedLevel().length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {getActivitiesForSelectedLevel().map((activity) => (
-                      <ActivityCard key={activity.id} activity={activity} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-16">
-                    <svg className="w-24 h-24 mx-auto mb-4" style={{ color: '#9ca3af' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">No hay actividades disponibles</h3>
-                    <p className="text-gray-600">No se encontraron actividades para este nivel.</p>
-                  </div>
-                )}
-              </>
+              <ActivityPage
+                selectedLevel={selectedLevel}
+                activitiesForLevel={getActivitiesForSelectedLevel()}
+              />
             ) : (
               // Welcome message when no level is selected
               <div className="text-center py-16">

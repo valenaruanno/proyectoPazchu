@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { teacherAPI } from '../utils/api';
+import CreateActivityModal from './modals/CreateActivityModal';
+import FloatingActionButton from './FloatingActionButton';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('activities');
@@ -10,10 +12,13 @@ const Admin = () => {
   const [teacherData, setTeacherData] = useState(null);
   const navigate = useNavigate();
 
-  // Estados para formularios
+  // Estados para modales
+  const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
+  const [editingActivity, setEditingActivity] = useState(null);
+
+  // Estados para formularios (mantener para otros usos si es necesario)
   const [showActivityForm, setShowActivityForm] = useState(false);
   const [showLevelForm, setShowLevelForm] = useState(false);
-  const [editingActivity, setEditingActivity] = useState(null);
   const [editingLevel, setEditingLevel] = useState(null);
 
   // Estados para los formularios
@@ -52,6 +57,32 @@ const Admin = () => {
       console.error('Error loading data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Funciones para el modal de actividades
+  const handleOpenCreateActivityModal = () => {
+    setEditingActivity(null);
+    setShowCreateActivityModal(true);
+  };
+
+  const handleOpenEditActivityModal = (activity) => {
+    setEditingActivity(activity);
+    setShowCreateActivityModal(true);
+  };
+
+  const handleCloseActivityModal = () => {
+    setShowCreateActivityModal(false);
+    setEditingActivity(null);
+  };
+
+  const handleActivityCreated = async () => {
+    // Recargar actividades después de crear/editar
+    try {
+      const updatedActivities = await teacherAPI.getAllActivities();
+      setActivities(updatedActivities);
+    } catch (error) {
+      console.error('Error reloading activities:', error);
     }
   };
 
@@ -166,7 +197,12 @@ const Admin = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 space-y-4 sm:space-y-0">
             <div className="flex flex-col sm:flex-row sm:items-center">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Panel de Administración</h1>
+              <button 
+                onClick={() => navigate('/')}
+                className="text-xl sm:text-2xl font-bold text-gray-900"
+              >
+                Panel de Administración
+              </button>
               {teacherData && (
                 <span className="text-sm sm:text-base text-gray-600 sm:ml-4 mt-1 sm:mt-0">
                   Bienvenido, {teacherData.name} {teacherData.lastName}
@@ -174,12 +210,7 @@ const Admin = () => {
               )}
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <button
-                onClick={() => navigate('/')}
-                className="text-gray-600 hover:text-blue-600 transition duration-200 text-sm sm:text-base"
-              >
-                Ir al sitio
-              </button>
+              
               <button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-sm sm:text-base w-full sm:w-auto"
@@ -227,12 +258,8 @@ const Admin = () => {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Gestión de Actividades</h2>
               <button
-                onClick={() => {
-                  setEditingActivity(null);
-                  setActivityForm({ name: '', description: '', content: '', levelId: '' });
-                  setShowActivityForm(true);
-                }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center justify-center w-full sm:w-auto text-sm sm:text-base"
+                onClick={handleOpenCreateActivityModal}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center w-full sm:w-auto text-sm sm:text-base shadow-md hover:shadow-lg"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -249,7 +276,7 @@ const Admin = () => {
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate pr-2">{activity.name}</h3>
                     <div className="flex space-x-1 sm:space-x-2 flex-shrink-0">
                       <button
-                        onClick={() => handleEditActivity(activity)}
+                        onClick={() => handleOpenEditActivityModal(activity)}
                         className="text-blue-600 hover:text-blue-700 p-1"
                         title="Editar"
                       >
@@ -514,6 +541,28 @@ const Admin = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Modal para crear/editar actividades */}
+      <CreateActivityModal
+        isOpen={showCreateActivityModal}
+        onClose={handleCloseActivityModal}
+        levels={levels}
+        onActivityCreated={handleActivityCreated}
+        editingActivity={editingActivity}
+      />
+
+      {/* Botón flotante - solo en la pestaña de actividades */}
+      {activeTab === 'activities' && (
+        <FloatingActionButton
+          onClick={handleOpenCreateActivityModal}
+          tooltip="Nueva Actividad"
+          icon={
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          }
+        />
       )}
     </div>
   );

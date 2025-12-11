@@ -15,21 +15,21 @@ const Navbar = ({ levels, selectedLevel, onLevelSelect }) => {
   return (
     <nav style={{ background: 'linear-gradient(to right, #2563eb, #7c3aed)' }} className="shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-white text-xl font-bold">English Teacher</h1>
+            <h1 className="text-white text-lg sm:text-xl font-bold">English Teacher</h1>
           </div>
 
           {/* Menu de Niveles */}
           <div className="navbar-dropdown">
             <button
               onClick={toggleDropdown}
-              className="text-white px-4 py-2 rounded-lg flex items-center hover:bg-white/20 transition-all duration-300"
+              className="text-white px-3 sm:px-4 py-2 rounded-lg flex items-center hover:bg-white/20 transition-all duration-300 text-sm sm:text-base"
               style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
               aria-expanded={isDropdownOpen}
             >
-              <span>{selectedLevel ? selectedLevel.name : 'Selecciona un nivel'}</span>
+              <span className="truncate max-w-32 sm:max-w-none">{selectedLevel ? selectedLevel.name : 'Selecciona un nivel'}</span>
               <svg
                 style={{
                   transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
