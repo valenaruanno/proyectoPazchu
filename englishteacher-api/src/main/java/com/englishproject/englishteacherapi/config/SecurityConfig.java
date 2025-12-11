@@ -32,7 +32,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:*"));
+        
+        // Permitir los orígenes configurados en las variables de entorno
+        String allowedOrigins = System.getenv("CORS_ORIGINS");
+        if (allowedOrigins != null && allowedOrigins.equals("*")) {
+            configuration.addAllowedOriginPattern("*");
+        } else if (allowedOrigins != null) {
+            configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        } else {
+            // Fallback para desarrollo
+            configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:*", "https://*.railway.app"));
+        }
+        
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
