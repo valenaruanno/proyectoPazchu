@@ -1,0 +1,15 @@
+[providers]
+node = "18"
+
+[variables]
+NODE_ENV = "production"
+
+[phases.build]
+cmds = [
+    "cd english-teacher/frontend",
+    "npm install",
+    "npm run build"
+]
+
+[phases.start]
+cmd = "cd english-teacher/frontend && npx serve -s dist -l 3000"
