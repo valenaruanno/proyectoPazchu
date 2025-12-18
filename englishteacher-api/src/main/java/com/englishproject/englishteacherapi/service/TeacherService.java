@@ -15,6 +15,13 @@ public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    public List<TeacherDTO> getAllTeachers() {
+        return teacherRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public Optional<TeacherDTO> getTeacherById(Long id) {
         return teacherRepository.findById(id)
                 .map(this::convertToDTO);

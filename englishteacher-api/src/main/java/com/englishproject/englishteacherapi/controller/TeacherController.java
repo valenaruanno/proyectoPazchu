@@ -5,17 +5,29 @@ import com.englishproject.englishteacherapi.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/teachers")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class TeacherController {
 
     @Autowired
     private TeacherService teacherService;
 
+    // Endpoint público para obtener todos los teachers
+    @GetMapping("/all")
+    public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
+        List<TeacherDTO> teachers = teacherService.getAllTeachers();
+        return ResponseEntity.ok(teachers);
+    }
+
+    // Endpoint público para obtener un teacher por ID
     @GetMapping("/{id}")
     public ResponseEntity<TeacherDTO> getTeacherById(@PathVariable Long id) {
         return teacherService.getTeacherById(id)
@@ -23,24 +35,103 @@ public class TeacherController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<TeacherDTO> createTeacher(@RequestBody TeacherDTO teacherDTO) {
-        TeacherDTO createdTeacher = teacherService.createTeacher(teacherDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTeacher);
-    }
+    // Endpoint administrativo protegido para crear un teacher
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> createTeacher(@RequestBody TeacherDTO teacherDTO) {
+        Map<String, Object> response = new HashMap<>();
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TeacherDTO> updateTeacher(@PathVariable Long id, @RequestBody TeacherDTO teacherDTO) {
-        return teacherService.updateTeacher(id, teacherDTO)
-                .map(teacher -> ResponseEntity.ok(teacher))
-                .orElse(ResponseEntity.notFound().build());
-    }
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String authenticatedEmail = auth.getName();
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
-        if (teacherService.deleteTeacher(id)) {
-            return ResponseEntity.noContent().build();
+            TeacherDTO createdTeacher = teacherService.createTeacher(teacherDTO);
+
+            response.put("success", true);
+            response.put("message", "Profesor creado exitosamente");
+            response.put("teacher", createdTeacher);
+            response.put("created_by", authenticatedEmail);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al crear profesor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return ResponseEntity.notFound().build();
+    }
+
+    // Endpoint administrativo protegido para actualizar un teacher
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Map<String, Object>> updateTeacher(@PathVariable Long id, @RequestBody TeacherDTO teacherDTO) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String authenticatedEmail = auth.getName();
+
+            return teacherService.updateTeacher(id, teacherDTO)
+                .map(teacher -> {
+                    response.put("success", true);
+                    response.put("message", "Profesor actualizado exitosamente");
+                    response.put("teacher", teacher);
+                    response.put("updated_by", authenticatedEmail);
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    response.put("success", false);
+                    response.put("message", "Profesor no encontrado");
+                    return ResponseEntity.notFound().build();
+                });
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al actualizar profesor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // Endpoint administrativo protegido para eliminar un teacher
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Map<String, Object>> deleteTeacher(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String authenticatedEmail = auth.getName();
+
+            if (teacherService.deleteTeacher(id)) {
+                response.put("success", true);
+                response.put("message", "Profesor eliminado exitosamente");
+                response.put("deleted_by", authenticatedEmail);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Profesor no encontrado");
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al eliminar profesor: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // Endpoint administrativo para obtener información del admin autenticado
+    @GetMapping("/admin/profile")
+    public ResponseEntity<Map<String, Object>> getAdminProfile() {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String authenticatedEmail = auth.getName();
+
+            response.put("success", true);
+            response.put("email", authenticatedEmail);
+            response.put("message", "Perfil de administrador obtenido exitosamente");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error al obtener perfil de administrador");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
