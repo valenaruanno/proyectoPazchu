@@ -13,11 +13,21 @@ export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   console.log('Making API call to:', url);
 
+  // Solo agregar token para rutas administrativas
+  const isAdminRoute = endpoint.includes('/create') || 
+                      endpoint.includes('/update') || 
+                      endpoint.includes('/delete') || 
+                      endpoint.includes('/admin');
+
+  // Obtener token si existe y la ruta lo necesita
+  const token = isAdminRoute ? authUtils.getAuthToken() : null;
+
   const config = {
     ...apiConfig,
     ...options,
     headers: {
       ...apiConfig.headers,
+      ...(token && { 'Authorization': `Bearer ${token}` }),
       ...options.headers,
     },
   };
@@ -26,6 +36,17 @@ export const apiCall = async (endpoint, options = {}) => {
     const response = await fetch(url, config);
     console.log('Response status:', response.status);
     console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+    // Solo verificar autenticación en rutas administrativas
+    if (isAdminRoute && (response.status === 401 || response.status === 403)) {
+      console.warn('Token expirado o inválido - Logout automático');
+      authUtils.logout();
+      // Redirigir al home si no estamos ya ahí
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
+      }
+      throw new Error('Sesión expirada');
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -44,6 +65,70 @@ export const apiCall = async (endpoint, options = {}) => {
   } catch (error) {
     console.error('API call failed:', error);
     throw error;
+  }
+};
+
+// Funciones de gestión de autenticación
+export const authUtils = {
+  // Verificar si la sesión es válida
+  isSessionValid: () => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const sessionExpiration = localStorage.getItem('sessionExpiration');
+    
+    if (!isAuthenticated || !sessionExpiration) {
+      return false;
+    }
+    
+    const currentTime = new Date().getTime();
+    const expirationTime = parseInt(sessionExpiration);
+    
+    if (currentTime > expirationTime) {
+      // Sesión expirada, limpiar localStorage
+      authUtils.logout();
+      return false;
+    }
+    
+    return true;
+  },
+
+  // Obtener datos del usuario autenticado
+  getAuthenticatedUser: () => {
+    if (!authUtils.isSessionValid()) {
+      return null;
+    }
+    
+    const teacherData = localStorage.getItem('teacherData');
+    return teacherData ? JSON.parse(teacherData) : null;
+  },
+
+  // Obtener token de autenticación
+  getAuthToken: () => {
+    if (!authUtils.isSessionValid()) {
+      return null;
+    }
+    
+    return localStorage.getItem('authToken');
+  },
+
+  // Cerrar sesión
+  logout: () => {
+    localStorage.removeItem('teacherData');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('loginTime');
+    localStorage.removeItem('sessionExpiration');
+  },
+
+  // Obtener tiempo restante de sesión en minutos
+  getSessionTimeRemaining: () => {
+    const sessionExpiration = localStorage.getItem('sessionExpiration');
+    if (!sessionExpiration) return 0;
+    
+    const currentTime = new Date().getTime();
+    const expirationTime = parseInt(sessionExpiration);
+    const timeRemaining = expirationTime - currentTime;
+    
+    return Math.max(0, Math.floor(timeRemaining / (1000 * 60))); // en minutos
   }
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginModal from './LoginModal';
+import LoginModal from './modals/LoginModal.jsx';
 
 const Login = () => {
   const [showModal, setShowModal] = useState(true);

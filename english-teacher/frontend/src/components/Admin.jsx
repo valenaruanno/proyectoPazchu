@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { teacherAPI } from '../utils/api';
+import { teacherAPI, authUtils } from '../utils/api';
 import CreateActivityModal from './modals/CreateActivityModal';
 import FloatingActionButton from './FloatingActionButton';
+import SessionManager from './SessionManager';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('activities');
@@ -29,20 +30,30 @@ const Admin = () => {
     levelId: ''
   });
 
+  // Estados para alertas de sesión
+  // Hook de autenticación con logout automático
+  const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
+
   const [levelForm, setLevelForm] = useState({
     name: '',
     description: ''
   });
 
   useEffect(() => {
+    // Verificar autenticación al cargar
+    if (!authUtils.isSessionValid()) {
+      navigate('/');
+      return;
+    }
+
     // Obtener datos del usuario desde localStorage
-    const userData = localStorage.getItem('teacherData');
+    const userData = authUtils.getAuthenticatedUser();
     if (userData) {
-      setTeacherData(JSON.parse(userData));
+      setTeacherData(userData);
     }
 
     loadInitialData();
-  }, []);
+  }, [navigate]);
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -87,8 +98,7 @@ const Admin = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('teacherData');
-    localStorage.removeItem('isAuthenticated');
+    authUtils.logout();
     navigate('/');
   };
 
@@ -191,7 +201,8 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <SessionManager>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -210,7 +221,6 @@ const Admin = () => {
               )}
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-              
               <button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 text-sm sm:text-base w-full sm:w-auto"
@@ -565,6 +575,7 @@ const Admin = () => {
         />
       )}
     </div>
+    </SessionManager>
   );
 };
 

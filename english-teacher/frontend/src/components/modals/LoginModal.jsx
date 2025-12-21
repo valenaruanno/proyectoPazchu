@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../utils/api';
+import { authAPI } from '../../utils/api';
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -25,12 +25,20 @@ const LoginModal = ({ isOpen, onClose }) => {
 
     try {
       const response = await authAPI.login(formData.email, formData.password);
+      console.log('Login response:', response);
 
       if (response.success) {
-        // Guardar datos del usuario en localStorage
+        // Guardar datos del usuario en localStorage con tiempo de expiración
+        const loginTime = new Date().getTime();
+        const expirationTime = loginTime + (30 * 60 * 1000); // 30 minutos
+        
         localStorage.setItem('teacherData', JSON.stringify(response.teacher));
+        localStorage.setItem('authToken', response.token || ''); // Token JWT si lo tienes
         localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('loginTime', loginTime.toString());
+        localStorage.setItem('sessionExpiration', expirationTime.toString());
 
+        console.log('Login successful, redirecting to admin...');
         // Cerrar modal y redirigir
         onClose();
         navigate('/admin');

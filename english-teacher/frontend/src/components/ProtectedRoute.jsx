@@ -1,10 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { authUtils } from '../utils/api';
 
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const isSessionValid = authUtils.isSessionValid();
 
-  if (!isAuthenticated) {
+  if (!isSessionValid) {
     return <Navigate to="/login" replace />;
   }
 
