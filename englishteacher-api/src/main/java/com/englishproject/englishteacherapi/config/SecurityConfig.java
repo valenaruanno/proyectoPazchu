@@ -32,8 +32,8 @@ public class SecurityConfig {
 
                 // Rutas públicas de consulta (solo lectura)
                 .requestMatchers("/api/teachers/all", "/api/teachers/{id}").permitAll()
-                .requestMatchers("/api/levels/all", "/api/levels/{id}").permitAll()
-                .requestMatchers("/api/activities/all", "/api/activities/{id}", "/api/activities/level/{levelId}").permitAll()
+                .requestMatchers("/api/levels", "/api/levels/**").permitAll()
+                .requestMatchers("/api/activities", "/api/activities/**").permitAll()
 
                 // Rutas administrativas que requieren JWT
                 .requestMatchers("/api/teachers/create", "/api/teachers/update/**", "/api/teachers/delete/**").authenticated()
