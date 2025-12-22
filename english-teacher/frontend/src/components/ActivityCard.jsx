@@ -1,5 +1,5 @@
 import React from 'react';
-import { fileAPI } from '../utils/api';
+import { fileAPI, API_FILE_BASE_URL } from '../utils/api';
 
 const ActivityCard = ({ activity }) => {
   // Mapeo de tipos del backend al español
@@ -19,7 +19,7 @@ const ActivityCard = ({ activity }) => {
       try {
         // Intentar descarga directa primero
         const link = document.createElement('a');
-        link.href = `http://localhost:8080${activity.resourceFileUrl}`;
+        link.href = `${API_FILE_BASE_URL}${activity.resourceFileUrl}`;
         link.download = activity.resourceFileName || 'archivo';
         link.target = '_self'; // Evitar que se abra en nueva pestaña
         document.body.appendChild(link);
@@ -28,7 +28,7 @@ const ActivityCard = ({ activity }) => {
       } catch (error) {
         console.error('Error en descarga:', error);
         // Fallback: abrir en nueva pestaña si la descarga directa falla
-        window.open(`http://localhost:8080${activity.resourceFileUrl}`, '_blank');
+        window.open(`${API_FILE_BASE_URL}${activity.resourceFileUrl}`, '_blank');
       }
     }
   };
