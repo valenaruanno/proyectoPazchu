@@ -174,7 +174,7 @@ public class FileController {
 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + safeFileName + "\"")
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + safeFileName + "\"")
                         .body(resource);
             } else {
                 logger.info("Archivo no encontrado o no legible: {}", fileName);

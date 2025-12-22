@@ -2,39 +2,45 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: var(--font-body, 'Poppins', sans-serif);
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, var(--primary-cream, #F5F2E8) 0%, var(--warm-beige, #D4C4A8) 100%);
 }
 
 .teacher-info {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--rich-brown, #8B6F47) 0%, var(--soft-taupe, #B8A082) 100%);
   color: white;
   padding: 40px;
-  border-radius: 15px;
+  border-radius: 20px;
   margin-bottom: 30px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 35px rgba(139, 111, 71, 0.3);
+  border: 2px solid var(--primary-beige, #E8DCC6);
 }
 
 .teacher-info h1 {
   margin: 0 0 15px 0;
-  font-size: 2.8rem;
-  font-weight: 700;
+  font-size: 3rem;
+  font-weight: 600;
+  font-family: var(--font-heading, 'Cormorant Garamond', serif);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
 }
 
 .teacher-email {
   margin: 8px 0;
   font-size: 1.1rem;
-  opacity: 0.9;
+  opacity: 0.95;
   font-style: italic;
+  font-family: var(--font-body);
 }
 
 .teacher-subject {
   margin: 8px 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  letter-spacing: 0.5px;
 }
 
 .teacher-description {
@@ -44,7 +50,8 @@
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-family: var(--font-body);
 }
 
 /* Nuevos estilos para información adicional del profesor */
@@ -91,8 +98,8 @@
 }
 
 .dropdown-button {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--warm-beige) 0%, var(--accent-brown) 100%);
+  color: var(--text-dark);
   padding: 15px 25px;
   font-size: 16px;
   border: none;
@@ -104,12 +111,12 @@
   width: 100%;
   justify-content: space-between;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 15px rgba(140, 122, 97, 0.3);
 }
 
 .dropdown-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(140, 122, 97, 0.4);
 }
 
 .arrow {
@@ -152,8 +159,8 @@
 }
 
 .dropdown-item:hover {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  color: #4CAF50;
+  background: linear-gradient(135deg, var(--primary-cream) 0%, var(--warm-beige) 100%);
+  color: var(--accent-brown);
 }
 
 .activities-list {
@@ -167,12 +174,13 @@
 }
 
 .activities-list h3 {
-  color: #34495e;
+  color: var(--text-dark);
   margin-bottom: 20px;
   font-size: 1.8rem;
   text-align: center;
   padding-bottom: 10px;
-  border-bottom: 3px solid #4CAF50;
+  border-bottom: 3px solid var(--accent-brown);
+  font-family: 'Cormorant Garamond', serif;
 }
 
 .activities-grid {
@@ -183,11 +191,11 @@
 }
 
 .activity-item {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: linear-gradient(135deg, var(--background-cream) 0%, var(--primary-cream) 100%);
   padding: 25px;
   border-radius: 12px;
-  border-left: 5px solid #4CAF50;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--accent-brown);
+  box-shadow: 0 4px 15px rgba(140, 122, 97, 0.1);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -195,7 +203,7 @@
 
 .activity-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgba(140, 122, 97, 0.2);
 }
 
 .activity-item::before {
@@ -205,14 +213,15 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #4CAF50, #45a049);
+  background: linear-gradient(90deg, var(--warm-beige), var(--accent-brown));
 }
 
 .activity-item h4 {
   margin: 0 0 12px 0;
-  color: #2c3e50;
+  color: var(--text-dark);
   font-size: 1.3rem;
   font-weight: 600;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 .activity-item p {
@@ -239,18 +248,18 @@
 }
 
 .duration {
-  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-  color: #1976d2;
+  background: linear-gradient(135deg, var(--soft-brown) 0%, var(--warm-beige) 100%);
+  color: var(--accent-brown);
 }
 
 .difficulty {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
-  color: #f57c00;
+  background: linear-gradient(135deg, var(--primary-cream) 0%, var(--warm-beige) 100%);
+  color: var(--text-dark);
 }
 
 .activity-type {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--warm-beige) 0%, var(--accent-brown) 100%);
+  color: var(--background-cream);
   padding: 4px 12px;
   border-radius: 15px;
   font-size: 0.85rem;
@@ -266,8 +275,8 @@
 }
 
 .resource-link {
-  background: #4CAF50;
-  color: white;
+  background: var(--accent-brown);
+  color: var(--background-cream);
   padding: 8px 16px;
   text-decoration: none;
   border-radius: 6px;
@@ -279,9 +288,10 @@
 }
 
 .resource-link:hover {
-  background: #45a049;
+  background: var(--warm-beige);
+  color: var(--text-dark);
   transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 3px 10px rgba(140, 122, 97, 0.3);
 }
 
 .created-date {

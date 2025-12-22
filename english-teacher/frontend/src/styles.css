@@ -1,3 +1,6 @@
+/* Importar Google Fonts - Tipografías elegantes */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 /* Reset básico */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -8,28 +11,54 @@
   padding: 0;
 }
 
-body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+/* Variables CSS - Paleta inspirada en English Friends */
+:root {
+  /* Colores principales - tonos cálidos y elegantes */
+  --primary-cream: #F5F2E8;
+  --primary-beige: #E8DCC6;
+  --warm-beige: #D4C4A8;
+  --soft-taupe: #B8A082;
+  --rich-brown: #8B6F47;
+  --accent-sage: #A8B5A0;
+  --soft-pink: #E6D3D3;
+  
+  /* Textos */
+  --text-primary: #2C2416;
+  --text-secondary: #5D4E2F;
+  --text-muted: #8B7A5A;
+  
+  /* Tipografías */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Poppins', sans-serif;
 }
 
-/* Utility classes (simulando Tailwind) */
-.min-h-screen { min-height: 100vh; }
-.bg-gray-50 { background-color: #f9fafb; }
-.bg-white { background-color: #ffffff; }
-.bg-blue-600 { background-color: #2563eb; }
-.bg-purple-600 { background-color: #7c3aed; }
-.bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
-.from-blue-600 { --tw-gradient-from: #2563eb; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(37, 99, 235, 0)); }
-.to-purple-600 { --tw-gradient-to: #7c3aed; }
-.from-blue-50 { --tw-gradient-from: #eff6ff; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(239, 246, 255, 0)); }
-.to-purple-50 { --tw-gradient-to: #faf5ff; }
+body {
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-body);
+  background: linear-gradient(135deg, var(--primary-cream) 0%, var(--primary-beige) 100%);
+  color: var(--text-primary);
+}
 
+/* Utility classes actualizadas con la nueva paleta */
+.min-h-screen { min-height: 100vh; }
+.bg-cream { background-color: var(--primary-cream); }
+.bg-beige { background-color: var(--primary-beige); }
+.bg-warm-beige { background-color: var(--warm-beige); }
+.bg-white { background-color: #ffffff; }
+.bg-sage { background-color: var(--accent-sage); }
+.bg-brown { background-color: var(--rich-brown); }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
 .text-white { color: #ffffff; }
-.text-gray-600 { color: #4b5563; }
-.text-gray-900 { color: #111827; }
-.text-blue-600 { color: #2563eb; }
+.text-sage { color: var(--accent-sage); }
+.text-brown { color: var(--rich-brown); }
+
+/* Tipografías */
+.font-heading { font-family: var(--font-heading); }
+.font-body { font-family: var(--font-body); }
 
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -184,8 +213,8 @@ body {
 }
 
 .navbar-dropdown-item:hover {
-  background-color: #eff6ff;
-  color: #2563eb;
+  background-color: #faf5f0;
+  color: #cd853f;
 }
 
 /* Cards */
