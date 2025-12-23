@@ -160,4 +160,4 @@ const ActivityCard = ({ activity }) => {
   );
 };
 
-export default ActivityCard;
+export default React.memo(ActivityCard);

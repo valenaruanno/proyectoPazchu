@@ -68,4 +68,4 @@ const Navbar = ({ levels, selectedLevel, onLevelSelect }) => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);
