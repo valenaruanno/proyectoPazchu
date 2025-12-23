@@ -82,12 +82,21 @@ export const apiCall = async (endpoint, options = {}) => {
       throw new Error('Sesión expirada');
     }
 
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const contentType = response.headers.get('content-type');
+      let errorMessage = `HTTP error! status: ${response.status}`;
+      if (contentType && contentType.includes('application/json')) {
+        const errorJson = await response.json();
+        if (errorJson.message) errorMessage = errorJson.message;
+        if (errorJson.errors) errorMessage += ': ' + errorJson.errors.join(', ');
+      } else {
+        errorMessage += '. Message: ' + await response.text();
+      }
+      throw new Error(errorMessage);
     }
 
-    // Verificar si la respuesta tiene contenido antes de parsear JSON
-    const contentType = response.headers.get('content-type');
+    const contentTye = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       const text = await response.text();
       console.log('Response text:', text);

@@ -65,9 +65,12 @@ public class ActivityController {
             response.put("errors", result.getAllErrors().stream()
                 .map(error -> error.getDefaultMessage())
                 .toList());
+            // Log detallado de errores
+            result.getAllErrors().forEach(error -> {
+                System.err.println("[VALIDATION ERROR] " + error.getDefaultMessage());
+            });
             return ResponseEntity.badRequest().body(response);
         }
-        
         try {
             ActivityDTO createdActivity = activityService.createActivity(activityDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdActivity);
@@ -75,7 +78,16 @@ public class ActivityController {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", e.getMessage());
+            // Log del error de negocio
+            System.err.println("[CREATE ACTIVITY ERROR] " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Error inesperado al crear la actividad: " + e.getMessage());
+            // Log del error inesperado
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
