@@ -18,7 +18,7 @@ const Navbar = ({ levels, selectedLevel, onLevelSelect }) => {
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-white text-lg sm:text-xl font-bold">English Teacher</h1>
+            <h1 className="text-white text-lg sm:text-xl font-bold">English With Friends</h1>
           </div>
 
           {/* Menu de Niveles */}

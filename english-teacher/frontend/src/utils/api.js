@@ -96,7 +96,7 @@ export const apiCall = async (endpoint, options = {}) => {
       throw new Error(errorMessage);
     }
 
-    const contentTye = response.headers.get('content-type');
+    const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
       const text = await response.text();
       console.log('Response text:', text);

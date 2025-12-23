@@ -105,8 +105,7 @@ const Home = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  Bienvenido, {teacherData?.name && teacherData?.lastName ?
-                    `${teacherData.name} ${teacherData.lastName}` : 'Profesor'}
+                  Bienvenidos a English With Friends
                 </h1>
                 {teacherData?.description && (
                   <p className="text-xl md:text-2xl max-w-4xl mx-auto" style={{
